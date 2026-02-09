@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Patient Full Details</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      white-space: nowrap;
+    }
+    th {
+      background: #f3f4f6;
+      position: sticky;
+      top: 0;
+    }
+    .wrap {
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Patient – Full Details</h2>
+
+<div class="wrap">
+<table>
+  <thead>
+    <tr>
+      <!-- PATIENT -->
+      <th>ID</th>
+      <th>Title</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Gender</th>
+      <th>Age</th>
+      <th>DOB</th>
+      <th>City</th>
+      <th>Language</th>
+      <th>Pin Code</th>
+      <th>Address</th>
+      <th>Email</th>
+      <th>Created At</th>
+
+      <!-- ADDITIONAL DETAILS -->
+      <th>Marital Status</th>
+      <th>Anniversary</th>
+      <th>Blood Group</th>
+      <th>Spouse Name</th>
+      <th>Spouse Blood Group</th>
+      <th>Referring Doctor</th>
+      <th>Speciality</th>
+      <th>Channel</th>
+      <th>C/O</th>
+      <th>Occupation</th>
+      <th>Tag</th>
+      <th>Alternate Mobile</th>
+      <th>Aadhar Number</th>
+    </tr>
+  </thead>
+
+  <tbody id="patientBody"></tbody>
+</table>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  fetch('http://localhost:8089/api/patients/with-details')
+    .then(res => {
+      if (!res.ok) {
+        throw new Error("HTTP error " + res.status);
+      }
+      return res.json();
+    })
+    .then(data => {
+      console.log("FULL API RESPONSE:", data);
+
+      const body = document.getElementById("patientBody");
+      body.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        body.innerHTML = "<tr><td colspan='25'>No data found</td></tr>";
+        return;
+      }
+
+      data.forEach(row => {
+        const p = row.patient || {};
+        const d = row.additionalDetails || {};
+
+        body.innerHTML += `
+          <tr>
+            <td>${p.id ?? ""}</td>
+            <td>${p.title ?? ""}</td>
+            <td>${p.patientName ?? ""}</td>
+            <td>${p.phoneNumber ?? ""}</td>
+            <td>${p.gender ?? ""}</td>
+            <td>${p.age ?? ""}</td>
+            <td>${p.dob ?? ""}</td>
+            <td>${p.city ?? ""}</td>
+            <td>${p.language ?? ""}</td>
+            <td>${p.pinCode ?? ""}</td>
+            <td>${p.address ?? ""}</td>
+            <td>${p.email ?? ""}</td>
+            <td>${p.createdAt ?? ""}</td>
+
+            <td>${d.maritalStatus ?? "-"}</td>
+            <td>${d.anniversaryDate ?? "-"}</td>
+            <td>${d.bloodGroup ?? "-"}</td>
+            <td>${d.spouseName ?? "-"}</td>
+            <td>${d.spouseBloodGroup ?? "-"}</td>
+            <td>${d.referringDoctor ?? "-"}</td>
+            <td>${d.speciality ?? "-"}</td>
+            <td>${d.channel ?? "-"}</td>
+            <td>${d.cO ?? "-"}</td>
+            <td>${d.occupation ?? "-"}</td>
+            <td>${d.tag ?? "-"}</td>
+            <td>${d.alternateMobile ?? "-"}</td>
+          </tr>
+        `;
+      });
+    })
+    .catch(err => {
+      console.error("FETCH ERROR:", err);
+    });
+
+});
+</script>
+
+
+</body>
+</html>

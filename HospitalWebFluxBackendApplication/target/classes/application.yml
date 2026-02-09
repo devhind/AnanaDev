@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/hospital_db
+    username: postgres
+    password: 12345678
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    org.springframework.r2dbc: DEBUG
